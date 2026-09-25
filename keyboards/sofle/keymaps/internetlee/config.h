@@ -10,3 +10,8 @@
 #define TRI_LAYER_LOWER_LAYER 1
 #define TRI_LAYER_UPPER_LAYER 2
 #define TRI_LAYER_ADJUST_LAYER 3
+
+// Sync state to the slave half so its OLED HUD is accurate.
+#define SPLIT_LAYER_STATE_ENABLE                        // layer name on both halves
+#define SPLIT_LED_STATE_ENABLE                          // caps-lock carets on both halves
+#define SPLIT_TRANSACTION_IDS_USER RPC_ID_SYNC_CAPS_WORD // caps-word carets on both halves

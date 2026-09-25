@@ -10,8 +10,9 @@ Controller: RP2040 **Helios** converter (see `keymap.json`).
 
 - **QWERTY** (base)
 - **LOWER** — symbols, brackets, media/volume
-- **RAISE** — F-keys, arrow cluster
-- **ADJUST** — QK_BOOT (bootloader), debug toggle
+- **RAISE** — F-keys, arrow cluster, Caps Word / Caps Lock
+- **ADJUST** — QK_BOOT (bootloader), debug toggle. Reserved for a future
+  Aerospace / app-shortcut layer (reached by holding Lower + Raise together).
 
 ## Base layer highlights (carried over from the Iris)
 
@@ -24,22 +25,48 @@ Controller: RP2040 **Helios** converter (see `keymap.json`).
 
 ```
         LEFT                                 RIGHT
-  --  Cmd  --  Lower  --            Enter  Raise  Alt  Space  --
+  --  Cmd  --  Lower  Hyper        Enter  Raise  Alt  Space  --
   (outer ------> inner)            (inner <------ outer)
 ```
 
 - **Lower** on the left thumb, **Raise** on the right thumb.
+- **Hyper** (Ctrl+Alt+Shift+Gui, hold-only) on the big left home-thumb — a
+  collision-free chord key for app launching / window management.
 - **Enter** on the big inner right thumb, **Space** toward the outer right.
-- **Alt** (RAlt) on the right thumb.
-- **Cmd** (GUI) on the left thumb.
-- The two outer thumb keys per side are intentionally empty (`KC_NO`) for now.
-- **Adjust** is a momentary layer on the left encoder-side key; **Mute** is on
-  the right encoder-side key.
+- **Alt** (RAlt) on the right thumb, **Cmd** (GUI) on the left thumb.
+- The remaining outer thumb keys are empty (`KC_NO`) for now.
+- **Mute** / **Play-Pause** sit on the encoder-side keys.
 
 ## Encoders
 
-- **Left**: volume down / up
-- **Right**: page up / down
+Layer-aware. A held layer occupies the thumb on the *same* side as one knob, so
+only the two comfortable cross-hand combos get a special role — everything else
+falls back to base.
+
+| Layer           | Left knob      | Right knob   |
+| --------------- | -------------- | ------------ |
+| Base            | Volume         | Zoom (⌘ ∓)   |
+| Raise (R thumb) | **Undo / Redo**| → Zoom       |
+| Lower (L thumb) | → Volume       | **Scroll**   |
+
+Encoder **push**: left = Mute, right = Play/Pause.
+
+## OLED
+
+Both halves run a tall HUD (both forced to `OLED_ROTATION_270`) showing only
+what's relevant to that half:
+
+- **Layer name** in caps at the top (`BASE` / `LOWER` / `RAISE` / `ADJST`).
+- **That half's own knob action**: left half shows `VOL` / `SCRUB` (on Raise),
+  right half shows `ZOOM` / `SCRL` (on Lower).
+- **Caps carets**: a row of `^^^^^` across the bottom whenever Caps Lock or Caps
+  Word is active; blank otherwise.
+
+Layer and caps-lock state are synced to the slave (`SPLIT_LAYER_STATE_ENABLE`,
+`SPLIT_LED_STATE_ENABLE`); Caps Word is mirrored over a small split RPC so the
+carets match on both halves.
+
+The display is 5 glyphs wide, so `SCROLL` is abbreviated `SCRL`.
 
 ## Build
 
